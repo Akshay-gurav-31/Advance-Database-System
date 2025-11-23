@@ -1,0 +1,38 @@
+-- ORACLE support
+
+-- Create Oracle OBJECT type
+CREATE TYPE Address AS OBJECT (
+    street  VARCHAR2(50),
+    city    VARCHAR2(30),
+    pincode NUMBER
+);
+/
+
+-- Create table using object type
+CREATE TABLE Person (
+    person_id INT PRIMARY KEY,
+    name      VARCHAR2(50),
+    addr      Address
+);
+
+-- Insert records using object constructor
+INSERT INTO Person VALUES
+(1, 'Amit', Address('MG Road', 'Pune', 411001));
+
+INSERT INTO Person VALUES
+(2, 'Riya', Address('FC Road', 'Mumbai', 400001));
+
+INSERT INTO Person VALUES
+(3, 'Kunal', Address('Camp', 'Nashik', 422001));
+
+-- Display full object (Oracle shows nested structure)
+SELECT * FROM Person;
+
+-- Access individual attributes of the object
+SELECT 
+    p.person_id,
+    p.name,
+    p.addr.street   AS street,
+    p.addr.city     AS city,
+    p.addr.pincode  AS pincode
+FROM Person p;

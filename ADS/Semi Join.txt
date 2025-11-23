@@ -1,0 +1,36 @@
+-- ORACLE support
+
+-- Create Employees table
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+-- Create Projects table
+CREATE TABLE Projects (
+    proj_id INT PRIMARY KEY,
+    emp_id INT
+);
+
+-- Insert employee data
+INSERT INTO Employees VALUES
+(1, 'Amit'),
+(2, 'Riya'),
+(3, 'Kunal'),
+(4, 'Sanjay');
+
+-- Insert project assignments
+INSERT INTO Projects VALUES
+(101, 1),
+(102, 3);
+
+-- Select employees who have at least one project (EXISTS subquery)
+SELECT 
+    e.emp_id, 
+    e.name
+FROM Employees e
+WHERE EXISTS (
+    SELECT 1
+    FROM Projects p
+    WHERE p.emp_id = e.emp_id
+);

@@ -1,0 +1,48 @@
+-- ORACLE support
+
+-- Create tables (Site A)
+CREATE TABLE Accounts_A (
+    acc_no NUMBER PRIMARY KEY,
+    balance NUMBER
+);
+
+-- Create tables (Site B)
+CREATE TABLE Accounts_B (
+    acc_no NUMBER PRIMARY KEY,
+    balance NUMBER
+);
+
+-- Insert initial data
+INSERT INTO Accounts_A VALUES (101, 5000);
+INSERT INTO Accounts_B VALUES (201, 8000);
+
+COMMIT;
+
+-- Begin distributed transaction
+-- (Oracle automatically handles Prepare + Commit phases internally)
+
+BEGIN
+    -- Site A update
+    UPDATE Accounts_A
+    SET balance = balance - 1000
+    WHERE acc_no = 101;
+
+    -- Site B update
+    UPDATE Accounts_B
+    SET balance = balance - 1000
+    WHERE acc_no = 201;
+
+    -- Oracle performs internal 2PC here
+    COMMIT;
+END;
+/
+
+-- Rollback version (only if needed)
+BEGIN
+    ROLLBACK;
+END;
+/
+
+-- Final verification
+SELECT * FROM Accounts_A;
+SELECT * FROM Accounts_B;

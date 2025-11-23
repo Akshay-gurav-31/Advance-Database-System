@@ -1,0 +1,67 @@
+-- ORACLE support
+
+-- Create main Employees table
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    dept_id INT,
+    salary INT,
+    city VARCHAR(50)
+);
+
+-- Insert sample data
+INSERT INTO Employees VALUES
+(1, 'Amit', 10, 50000, 'Pune'),
+(2, 'Riya', 20, 60000, 'Mumbai'),
+(3, 'Kunal', 10, 55000, 'Pune'),
+(4, 'Sanjay', 30, 65000, 'Nashik'),
+(5, 'Meera', 20, 62000, 'Mumbai'),
+(6, 'Teena', 10, 70000, 'Pune');
+
+-- Horizontal Fragmentation (Row-wise split)
+
+-- Employees from Pune
+CREATE TABLE Emp_Pune AS
+SELECT * FROM Employees
+WHERE city = 'Pune';
+
+-- Employees from Mumbai
+CREATE TABLE Emp_Mumbai AS
+SELECT * FROM Employees
+WHERE city = 'Mumbai';
+
+-- Employees from other cities
+CREATE TABLE Emp_Others AS
+SELECT * FROM Employees
+WHERE city NOT IN ('Pune', 'Mumbai');
+
+SELECT * FROM Emp_Pune;
+SELECT * FROM Emp_Mumbai;
+SELECT * FROM Emp_Others;
+
+-- Vertical Fragmentation (Column-wise split)
+
+-- Basic employee info
+CREATE TABLE Emp_Basic AS
+SELECT emp_id, name, dept_id
+FROM Employees;
+
+-- Salary information
+CREATE TABLE Emp_Salary AS
+SELECT emp_id, salary
+FROM Employees;
+
+-- Location information
+CREATE TABLE Emp_Location AS
+SELECT emp_id, city
+FROM Employees;
+
+SELECT * FROM Emp_Basic;
+SELECT * FROM Emp_Salary;
+SELECT * FROM Emp_Location;
+
+-- Prove vertical fragmentation correctness (Reconstruction)
+SELECT b.emp_id, b.name, b.dept_id, s.salary, l.city
+FROM Emp_Basic b
+JOIN Emp_Salary s ON b.emp_id = s.emp_id
+JOIN Emp_Location l ON b.emp_id = l.emp_id;

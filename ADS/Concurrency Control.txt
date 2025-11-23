@@ -1,0 +1,45 @@
+-- ORACLE support
+
+-- Create sample table
+CREATE TABLE employees (
+    emp_id     NUMBER PRIMARY KEY,   -- Primary key
+    emp_name   VARCHAR2(50),
+    salary     NUMBER
+);
+
+-- Insert sample data
+INSERT INTO employees VALUES (1, 'Ravi', 25000);
+INSERT INTO employees VALUES (2, 'Sneha', 30000);
+INSERT INTO employees VALUES (3, 'Amit', 28000);
+INSERT INTO employees VALUES (4, 'Kiran', 35000);
+
+COMMIT;  -- Save changes
+
+-- Create procedure to increase salary
+CREATE OR REPLACE PROCEDURE increase_salary(
+    p_emp_id      IN  NUMBER,        -- Employee ID
+    p_percentage  IN  NUMBER         -- Raise %
+)
+AS
+BEGIN
+    UPDATE employees
+    SET salary = salary + (salary * p_percentage / 100)
+    WHERE emp_id = p_emp_id;
+
+    DBMS_OUTPUT.PUT_LINE('Salary updated for Employee ID: ' || p_emp_id);  -- Oracle output
+END;
+/
+
+-- Execute the procedure
+BEGIN
+    increase_salary(2, 10);   -- Increase Sneha's salary by 10%
+END;
+/
+
+-- Display table after update
+SELECT * FROM employees;
+
+-- Show updated salary for one employee
+SELECT emp_name, salary
+FROM employees
+WHERE emp_id = 2;

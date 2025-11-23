@@ -1,0 +1,56 @@
+-- ORACLE support
+
+-- Create Employees table
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY,
+    name VARCHAR2(50),
+    dept_id INT,
+    salary INT
+);
+
+-- Create Departments table
+CREATE TABLE Departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR2(50)
+);
+
+-- Insert employee records
+INSERT INTO Employees VALUES
+(1, 'Amit', 10, 50000),
+(2, 'Riya', 20, 55000),
+(3, 'Kunal', 10, 60000),
+(4, 'Sanjay', 30, 65000),
+(5, 'Mira', 30, 70000),
+(6, 'Teena', 20, 52000);
+
+-- Insert department records
+INSERT INTO Departments VALUES
+(10, 'HR'),
+(20, 'Finance'),
+(30, 'IT');
+
+-- Aggregation with Oracle Parallel Hint (PostgreSQL ignores it)
+SELECT /*+ PARALLEL(Employees, 4) */
+       dept_id,
+       COUNT(*) AS total_employees,
+       AVG(salary) AS avg_salary
+FROM Employees
+GROUP BY dept_id
+ORDER BY dept_id;
+
+-- Select all employees ordered by salary
+SELECT /*+ PARALLEL(Employees, 4) */
+       *
+FROM Employees
+ORDER BY salary;
+
+-- Join Employees with Departments (parallel hint applied)
+SELECT /*+ PARALLEL(4) */
+       e.emp_id,
+       e.name,
+       e.salary,
+       d.dept_name
+FROM Employees e
+JOIN Departments d
+ON e.dept_id = d.dept_id
+ORDER BY e.emp_id;

@@ -1,0 +1,47 @@
+-- ORACLE support
+
+-- Create Employees table
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    dept_id INT
+);
+
+-- Create Departments table
+CREATE TABLE Departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50)
+);
+
+-- Insert employee records
+INSERT INTO Employees VALUES
+(1, 'Amit', 10),
+(2, 'Riya', 20),
+(3, 'Sanjay', 10),
+(4, 'Kiran', 30);
+
+-- Insert department records
+INSERT INTO Departments VALUES
+(10, 'HR'),
+(20, 'Finance'),
+(30, 'IT');
+
+-- View Employees table
+SELECT * 
+FROM Employees 
+ORDER BY dept_id;
+
+-- View Departments table
+SELECT * 
+FROM Departments 
+ORDER BY dept_id;
+
+-- Join Employees with Departments
+SELECT 
+    e.emp_id,
+    e.name,
+    d.dept_name
+FROM Employees e
+JOIN Departments d
+ON e.dept_id = d.dept_id
+ORDER BY e.dept_id;
